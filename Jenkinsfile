@@ -2,16 +2,11 @@ pipeline{
     agent "any"
     stages{
         // clone code from git.
-        stage("Clone Code"){
-            steps{
-                echo "========executing Clone Code========"
-                git url: 'https://github.com/coolgourav147/spring-boot-war-example.git'
-                sh '''ls'''
-            }
-        }
+        
         // create a build.
         stage("Build"){
             steps{
+                sh '''ls'''
                 withMaven(maven: 'example-maven-name') {
                     // some block
                     echo "========Build code.========"
