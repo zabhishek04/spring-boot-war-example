@@ -27,7 +27,7 @@ environment {
                # ansible-playbook -i inventory.ini ansible.yml
 docker image build -t spring:tag1 .
 	docker login -u $SERVICE_CREDS_GAURAV_USR -p $SERVICE_CREDS_GAURAV_PSW
-				docker image tag image1:tag1 monika21vash/spring:tag1
+				docker image tag spring:tag1 monika21vash/spring:tag1
 				docker image push monika21vash/spring:tag1 
 				'''
          }
