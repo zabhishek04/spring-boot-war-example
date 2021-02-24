@@ -1,0 +1,12 @@
+- name: 'install tomcat server and deploy war file.'
+  hosts: tomcatserver
+  tasks:
+    - name: 'install tomcat server'
+      apt:
+        name: tomcat9
+        state: present
+
+    - name: 'deploy code on server'
+      copy:
+        src: target/hello-world-0.0.1-SNAPSHOT.war
+        dest: /tmp

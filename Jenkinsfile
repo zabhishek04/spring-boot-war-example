@@ -12,8 +12,7 @@ pipeline{
                     echo "========Build code.========"
                     sh ''' mvn clean install'''
                     sh '''ls'''
-                }
-                
+                }   
             }
         }
         
