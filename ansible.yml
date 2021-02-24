@@ -9,4 +9,4 @@
     - name: 'deploy code on server'
       copy:
         src: target/hello-world-0.0.1-SNAPSHOT.war
-        dest: /tmp
+        dest: /var/lib/tomcat9/webapps/ROOT.war
