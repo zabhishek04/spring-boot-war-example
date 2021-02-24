@@ -17,19 +17,26 @@ pipeline{
             }
         }
 
-        stage("deploy to test"){
-            steps {
+        stage("build and push image"){
+environment {
+				Name1 = "Saurav"
+				SERVICE_CREDS_GAURAV = credentials('dockerID')
+			}          
+  steps {
                 sh ''' 
-                ansible-playbook -i inventory.ini ansible.yml
-                '''
-            }
+               # ansible-playbook -i inventory.ini ansible.yml
+docker image build -t spring:tag1 .
+	docker login -u $SERVICE_CREDS_GAURAV_USR -p $SERVICE_CREDS_GAURAV_PSW
+				docker image tag image1:tag1 monika21vash/spring:tag1
+				docker image push monika21vash/spring:tag1 
+         }
         }
         
         // Extra: upload war file to artifactory.
         
         // depoly code to the testing server(tomcat) using ansible
         
-        // wait for approval
+        // wait for approva
         
         // deploy code to production server(tomcat) using ansible.
 
