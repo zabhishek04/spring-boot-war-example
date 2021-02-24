@@ -15,6 +15,14 @@ pipeline{
                 }   
             }
         }
+
+        stage("deploy to test"){
+            steps {
+                sh ''' 
+                ansible-playbook -i inventory.ini ansible.yml
+                '''
+            }
+        }
         
         // Extra: upload war file to artifactory.
         
