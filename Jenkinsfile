@@ -12,6 +12,7 @@ pipeline{
                     echo "========Build code.========"
                     sh ''' mvn clean install'''
                     sh '''ls'''
+                    slackSend channel: 'jenkinsdemo', message: 'build successfull', teamDomain: 'crgaurav', tokenCredentialId: 'slack'
                 }   
             }
         }
