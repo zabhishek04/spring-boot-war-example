@@ -34,7 +34,7 @@ pipeline{
 	stage("deploy in testing"){
 		steps{
                 	sh '''
-                        	docker context use ms
+                        	docker context use testing
 				docker service create -p 8080:8080 monika21vash/spring:tag1
                                 
                 	'''
