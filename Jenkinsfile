@@ -18,6 +18,10 @@ pipeline{
         }
 
 	stage("createImage and Push"){
+		environment {
+				Name1 = "Saurav"
+				SERVICE_CREDS_GAURAV = credentials('dockerID')
+		}
 		steps{
 			sh '''
 				docker image build -t spring:tag1 .
@@ -28,17 +32,21 @@ pipeline{
 		}
 	}
 	stage("deploy in testing"){
-                sh '''
-                        docker context use ms
-			docker service create -p 8080:8080 monika21vash/spring:tag1
+		steps{
+                	sh '''
+                        	docker context use ms
+				docker service create -p 8080:8080 monika21vash/spring:tag1
                                 
-                '''
+                	'''
+		}
         }
     post{
         always{
             echo "========always========"
-	    docker context use default
-        }
+	    sh '''
+		docker context use default
+        	'''
+	}
         success{
             echo "========pipeline executed successfully ========"
         }
