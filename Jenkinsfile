@@ -24,10 +24,11 @@ pipeline{
 		}
 		steps{
 			sh '''
-				docker image build -t spring:tag1 .
+				docker image build -t spring:${BUILD_ID} .
 				docker login -u $SERVICE_CREDS_GAURAV_USR -p $SERVICE_CREDS_GAURAV_PSW
-				docker image tag spring:tag1 monika21vash/spring:tag1
-				docker image push monika21vash/spring:tag1 
+				docker image tag spring:${BUILD_ID} monika21vash/spring:${BUILD_ID}
+				docker image push monika21vash/spring:${BUILD_ID} 
+                docker image ls
 			'''
 		}
 	}
@@ -35,11 +36,21 @@ pipeline{
 		steps{
                 	sh '''
                         	docker context use testing
+				            docker service create -p 8080:8080 --name testjavaapp --replicas=5 monika21vash/spring:${BUILD_ID} || docker service update --image monika21vash/spring:${BUILD_ID} testjavaapp
+                        '''
+		}
+        }
+    }
+    stage("deploy in productions"){
+		steps{
+                	sh '''
+                        	docker context use prod
 				            docker service create -p 8080:8080 --name testjavaapp --replicas=5 monika21vash/spring:tag1 || docker service update --image monika21vash/spring:tag1 testjavaapp
                         '''
 		}
         }
     }
+
     post{
         always{
             echo "========always========"
