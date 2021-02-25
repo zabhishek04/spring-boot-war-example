@@ -35,9 +35,9 @@ pipeline{
 		steps{
                 	sh '''
                         	docker context use testing
-				docker service create -p 8080:8080 monika21vash/spring:tag1
-                                
-                	'''
+				            docker service create --name testjavaapp -p 8080:8080 monika21vash/spring:tag1
+                            docker service update --image monika21vash/spring:tag1 testjavaapp            	
+                        '''
 		}
         }
     }
