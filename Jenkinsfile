@@ -17,35 +17,27 @@ pipeline{
             }
         }
 
-        stage("build and push image"){
-environment {
-				Name1 = "Saurav"
-				SERVICE_CREDS_GAURAV = credentials('dockerID')
-			}          
-  steps {
-                sh ''' 
-               # ansible-playbook -i inventory.ini ansible.yml
-docker image build -t spring:tag1 .
-	docker login -u $SERVICE_CREDS_GAURAV_USR -p $SERVICE_CREDS_GAURAV_PSW
+	stage("createImage and Push"){
+		steps{
+			sh '''
+				docker image build -t spring:tag1 .
+				docker login -u $SERVICE_CREDS_GAURAV_USR -p $SERVICE_CREDS_GAURAV_PSW
 				docker image tag spring:tag1 monika21vash/spring:tag1
 				docker image push monika21vash/spring:tag1 
-				'''
-         }
+			'''
+		}
+	}
+	stage("deploy in testing"){
+                sh '''
+                        docker context use ms
+			docker service create -p 8080:8080 monika21vash/spring:tag1
+                                
+                '''
         }
-        
-        // Extra: upload war file to artifactory.
-        
-        // depoly code to the testing server(tomcat) using ansible
-        
-        // wait for approva
-        
-        // deploy code to production server(tomcat) using ansible.
-
-        // send message to the slack.        
-    }
     post{
         always{
             echo "========always========"
+	    docker context use default
         }
         success{
             echo "========pipeline executed successfully ========"
