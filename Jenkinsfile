@@ -4,12 +4,7 @@ pipeline {
         maven 'maven-3.8.3' 
     }
     stages {
-        stage('Clone') {
-            steps {
-                //sh git clone "url" 
-                git 'https://github.com/coolgourav147/spring-boot-war-example.git'
-            }
-        }
+       
         stage('Build') {
             steps {
                 echo 'Build'
