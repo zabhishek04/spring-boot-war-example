@@ -3,36 +3,24 @@
 # this script will setup this project.
 # run ./setup.sh to run this project.
 #####
-################ define functions ###############
-function print_exit(){
-    local error_code=${1}
-    local error_msg=${2}
-    echo ${error_msg}
-    exit ${error_code}
-}
+# Include files. 
+. ./scripts/utils.sh
+. ./scripts/variables.sh
 
-function showBanner(){
-    banner_file=${1}
-    cat ${banner_file}
-}
 
-function installPackage() {
-    local packageName=${1}
-    if ! apt-get install -y ${packageName} > /dev/null
+
+function clean_up(){
+    if rm -rf ./target
     then
-        print_exit 1 "not able to install ${packageName}."
+        echo -e "${GREEN}clean up successfull.${NOCOLOR}"
+    else
+        echo -e "${GREEN}not able to do clean up.${NOCOLOR}"
     fi
 }
 
-function mavenTarget(){
-    local mavenCmd=${1}
-    if ! mvn ${mavenCmd} > /dev/null
-    then
-        print_exit 1 "${mavenCmd} fail."
-    fi
-}
+trap "clean_up;exit 2" 2
 
-##### Variables. #################
+showBanner scripts/banner.txt
 
 if [[ $UID != 0 ]]
 then
@@ -42,12 +30,13 @@ fi
 read -p "please enter access path " APP_CONTEXT
 APP_CONTEXT=${APP_CONTEXT:-app}
 
-if ! apt-get update > /dev/null
-then
-    print_exit 1 "not able to update the repository."
-fi
+apt-get update > /dev/null &
+last_command_pid=$!
+showProgress ${last_command_pid}
 
-showBanner banner.txt
+wait ${last_command_pid} || print_exit 1 "not able to update the repository."
+
+
 installPackage maven
 installPackage tomcat9
 mavenTarget test
@@ -62,11 +51,5 @@ fi
 
 # Clean Up code.
 
-if rm -rf ./target
-then
-    echo "clean up successfull."
-else
-    echo "not able to do clean up."
-fi
-
+clean_up
 exit 0
